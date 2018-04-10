@@ -1,17 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { filter } from 'rxjs/operators';
 import { NotificationsService } from 'angular2-notifications';
+import { filter } from 'rxjs/operators';
 
-import { TasksService } from './tasks.service';
-import { Task } from './shared/shared';
+import { TasksService } from '../tasks.service';
+import { Task } from '../shared/shared';
 
 @Component({
-    selector: 'tas-tasks',
-    templateUrl: './tasks.component.html',
-    styleUrls: ['./tasks.component.scss']
+    selector: 'tas-done-tasks',
+    templateUrl: './done-tasks.component.html',
+    styleUrls: ['./done-tasks.component.scss']
 })
-export class TasksComponent implements OnInit, OnDestroy {
+export class DoneTasksComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = null;
     public tasks: Task[] = null;
 
@@ -21,7 +21,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.subscriptions.push(this.tasksService.fetchTasks()
+        this.subscriptions.push(this.tasksService.doneTasks
             .pipe(filter(tasks => tasks !== null))
             .subscribe(tasks => this.tasks = tasks));
     }
@@ -30,13 +30,19 @@ export class TasksComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 
-    public removeTask($event: Task): void {
-        this.tasksService.remove($event)
+    public fetchClicked($event: any): void {
+        $event.preventDefault();
+
+        this.tasksService.fetchDoneTasks();
+    }
+
+    public statusChanged(index: number): void {
+        this.tasksService.makeTodo(this.tasks[index])
             .subscribe(
-                count => this.notificationsService.success('Remove', 'Success'),
+                () => this.notificationsService.success('Update', 'Success'),
                 error => {
                     console.error(error);
-                    this.notificationsService.error('Remove', 'Error');
+                    this.notificationsService.error('Update', 'Error');
                 }
             );
     }

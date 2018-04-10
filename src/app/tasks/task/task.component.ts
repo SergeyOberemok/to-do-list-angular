@@ -16,6 +16,7 @@ export class TaskComponent implements OnInit {
     private subscriptions: Subscription[] = null;
     @Input('task') task: Task;
     @Output('remove') removeEvent: EventEmitter<Task> = null;
+    @Output('done') doneEvent: EventEmitter<Task> = null;
     public isTitleClicked: boolean;
 
     constructor(
@@ -25,6 +26,7 @@ export class TaskComponent implements OnInit {
     ) {
         this.subscriptions = [];
         this.removeEvent = new EventEmitter();
+        this.doneEvent = new EventEmitter();
     }
 
     ngOnInit() {
@@ -64,6 +66,10 @@ export class TaskComponent implements OnInit {
                     this.notificationsService.error('Update', 'Error');
                 }
             );
+    }
+
+    public statusChanged($event: any): void {
+        this.doneEvent.emit(this.task);
     }
 
 }

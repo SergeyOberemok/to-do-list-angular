@@ -1,0 +1,5 @@
+<div class="row py-2" *ngFor="let task of tasks">
+    <div class="col">
+        <tas-task [task]="task" (remove)="removeTask($event)" (done)="makeTaskDone($event)"></tas-task>
+    </div>
+</div>

@@ -5,7 +5,12 @@ module.exports = class TaskController extends Controller {
 
     index(req, res) {
         super.connect('tasks', (collection) => {
-            collection.find({}).toArray((err, result) => {
+            let find = {};
+            if (req.query.done !== undefined) {
+                find.done = req.query.done === 'true' ? true : false;
+            }
+
+            collection.find(find).toArray((err, result) => {
                 if (err) {
                     console.error(err);
                     throw err;

@@ -3,11 +3,13 @@ export class Task {
     todo: string;
     deadline: string;
     priority: number;
+    done: boolean;
 
     constructor() {
         this.todo = '';
         this.deadline = null;
         this.priority = 0;
+        this.done = false;
     }
 
     public getPriorityContext(): string {
@@ -22,4 +24,5 @@ export class Task {
                 return 'priority-0';
         }
     }
+
 }

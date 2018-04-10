@@ -1,7 +1,7 @@
 <div class="row" [class.d-none]="isTitleClicked">
     <div class="col-1">
         <div class="form-check" [ngClass]="task.getPriorityContext()">
-            <input type="checkbox" class="form-check-input">
+            <input type="checkbox" class="form-check-input" [(ngModel)]="task.done" (ngModelChange)="statusChanged($event)">
             <i class="fas fa-fw fa-flag"></i>
         </div>
     </div>

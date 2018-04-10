@@ -5,10 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { TasksService } from './tasks.service';
-import { TasksComponent } from './tasks.component';
+import { TodoTasksComponent } from './todo-tasks/todo-tasks.component';
 import { AddTaskComponent } from './add-task/add-task.component';
 import { TaskComponent } from './task/task.component';
 import { EditTaskComponent } from './edit-task/edit-task.component';
+import { DoneTasksComponent } from './done-tasks/done-tasks.component';
 
 @NgModule({
     imports: [
@@ -17,8 +18,8 @@ import { EditTaskComponent } from './edit-task/edit-task.component';
         FormsModule,
         NgbModule
     ],
-    declarations: [TasksComponent, AddTaskComponent, TaskComponent, EditTaskComponent],
+    declarations: [TodoTasksComponent, AddTaskComponent, TaskComponent, EditTaskComponent, DoneTasksComponent],
     providers: [TasksService],
-    exports: [TasksComponent, AddTaskComponent]
+    exports: [TodoTasksComponent, AddTaskComponent, DoneTasksComponent]
 })
 export class TasksModule { }

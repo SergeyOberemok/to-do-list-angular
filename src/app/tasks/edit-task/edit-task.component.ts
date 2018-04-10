@@ -17,7 +17,7 @@ export class EditTaskComponent implements OnInit, OnChanges {
     @Output('ok') okEvent: EventEmitter<Task> = null;
     @Output('cancel') cancelEvent: EventEmitter<any> = null;
     @Input('focus') focus: boolean;
-    private todoIsInvalid: boolean;
+    public todoIsInvalid: boolean;
 
     constructor(private parser: NgbDateParserFormatter) {
         this.task = new Task();

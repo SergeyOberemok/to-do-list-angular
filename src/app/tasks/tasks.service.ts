@@ -3,28 +3,51 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map, switchMap, toArray } from 'rxjs/operators';
 import { Observer } from 'rxjs/Observer';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { Task, StoredTasks } from './shared/shared';
 
 @Injectable()
 export class TasksService {
-    private storedTasks: StoredTasks = null;
+    private storedTodoTasks: StoredTasks = null;
+    private storedDoneTasks: { tasks: Task[] } = null;
+    public doneTasks: BehaviorSubject<Task[]> = null;
 
     constructor(private http: HttpClient) {
-        this.storedTasks = new StoredTasks();
+        this.storedTodoTasks = new StoredTasks();
+        this.storedDoneTasks = { tasks: null };
+        this.doneTasks = new BehaviorSubject(Object.assign({}, this.storedDoneTasks).tasks);
     }
 
-    public fetchTasks(): Observable<Task[]> {
-        return this.storedTasks.getSubscription(this.makeFetchTasksRequest.bind(this));
+    public fetchTodoTasks(): Observable<Task[]> {
+        return this.storedTodoTasks.getSubscription(this.makeFetchTodoTasksRequest.bind(this));
     }
 
-    private makeFetchTasksRequest(): Observable<Task[]> {
-        return this.http.get<{ data: Task[] }>('/api/tasks').pipe(
-            map(response => response.data),
-            switchMap(tasks => Observable.from(tasks)),
-            map(task => Object.assign(new Task(), task)),
-            toArray()
-        );
+    private makeFetchTodoTasksRequest(): Observable<Task[]> {
+        return this.http.get<{ data: Task[] }>('/api/tasks', { params: { done: 'false' } })
+            .pipe(
+                map(response => response.data),
+                switchMap(tasks => Observable.from(tasks)),
+                map(task => Object.assign(new Task(), task)),
+                toArray()
+            );
+    }
+
+    public fetchDoneTasks(): void {
+        this.http.get<{ data: Task[] }>('/api/tasks', { params: { done: 'true' } })
+            .pipe(
+                map(response => response.data),
+                switchMap(tasks => Observable.from(tasks)),
+                map(task => Object.assign(new Task(), task)),
+                toArray()
+            )
+            .subscribe(
+                tasks => {
+                    this.storedDoneTasks.tasks = tasks;
+                    this.doneTasks.next(Object.assign({}, this.storedDoneTasks).tasks);
+                },
+                error => console.error(error)
+            );
     }
 
     public store(task: Task): Observable<Task> {
@@ -33,7 +56,7 @@ export class TasksService {
                 map(response => response.data),
                 map(storedTask => Object.assign(new Task(), storedTask)),
                 switchMap(storedTask => Observable.create((observer: Observer<Task>) => {
-                    this.storedTasks.push(storedTask);
+                    this.storedTodoTasks.push(storedTask);
 
                     observer.next(storedTask);
                     observer.complete();
@@ -46,7 +69,7 @@ export class TasksService {
             .pipe(
                 map(response => response.data),
                 switchMap(count => Observable.create((observer: Observer<number>) => {
-                    this.storedTasks.remove(task);
+                    this.storedTodoTasks.remove(task);
 
                     observer.next(count);
                     observer.complete();
@@ -54,12 +77,49 @@ export class TasksService {
             );
     }
 
-    public update(task: Task): Observable<Task> {
+    private makeUpdateRequest(task: Task): Observable<Task> {
         return this.http.put<{ data: Task }>(`/api/tasks/${task._id}`, task)
+            .pipe(map(response => response.data));
+    }
+
+    public update(task: Task): Observable<Task> {
+        return this.makeUpdateRequest(task)
             .pipe(
-                map(response => response.data),
                 switchMap(updatedTask => Observable.create((observer: Observer<Task>) => {
-                    this.storedTasks.update(updatedTask);
+                    this.storedTodoTasks.update(updatedTask);
+
+                    observer.next(updatedTask);
+                    observer.complete();
+                }))
+            );
+    }
+
+    public makeDone(task: Task): Observable<Task> {
+        return this.makeUpdateRequest(task)
+            .pipe(
+                switchMap(updatedTask => Observable.create((observer: Observer<Task>) => {
+                    this.storedTodoTasks.remove(task);
+
+                    if (this.storedDoneTasks.tasks !== null) {
+                        this.storedDoneTasks.tasks.push(task);
+                        this.doneTasks.next(Object.assign({}, this.storedDoneTasks).tasks);
+                    }
+
+                    observer.next(updatedTask);
+                    observer.complete();
+                }))
+            );
+    }
+
+    public makeTodo(task: Task): Observable<Task> {
+        return this.makeUpdateRequest(task)
+            .pipe(
+                switchMap(updatedTask => Observable.create((observer: Observer<Task>) => {
+                    const index = this.storedDoneTasks.tasks.indexOf(task);
+                    this.storedDoneTasks.tasks.splice(index, 1);
+                    this.doneTasks.next(Object.assign({}, this.storedDoneTasks).tasks);
+
+                    this.storedTodoTasks.push(task);
 
                     observer.next(updatedTask);
                     observer.complete();
