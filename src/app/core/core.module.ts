@@ -5,14 +5,11 @@ import './vendor/vendor';
 import './vendor/fontawesome';
 import './vendor/rxjs';
 
-import { NotificationsModule } from './notifications/notifications.module';
-
 @NgModule({
     imports: [
-        CommonModule,
-        NotificationsModule
+        CommonModule
     ],
     declarations: [],
-    exports: [NotificationsModule]
+    exports: []
 })
 export class CoreModule { }
