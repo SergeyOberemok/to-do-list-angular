@@ -16,4 +16,11 @@ export class StoredTasks extends Stored<Task[]> {
         this.setItem(Object.assign([], this._item));
     }
 
+    public update(updatedTask: Task): void {
+        const task = this._item.find(item => item._id === updatedTask._id);
+        Object.assign(task, updatedTask);
+
+        this.setItem(Object.assign([], this._item));
+    }
+
 }

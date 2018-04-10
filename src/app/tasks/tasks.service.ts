@@ -56,7 +56,15 @@ export class TasksService {
 
     public update(task: Task): Observable<Task> {
         return this.http.put<{ data: Task }>(`/api/tasks/${task._id}`, task)
-            .pipe(map(response => response.data));
+            .pipe(
+                map(response => response.data),
+                switchMap(updatedTask => Observable.create((observer: Observer<Task>) => {
+                    this.storedTasks.update(updatedTask);
+
+                    observer.next(updatedTask);
+                    observer.complete();
+                }))
+            );
     }
 
 }

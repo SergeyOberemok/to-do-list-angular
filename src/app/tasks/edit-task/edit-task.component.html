@@ -1,5 +1,5 @@
 <div class="input-group">
-    <input type="text" class="form-control" [(ngModel)]="task.todo" #inputTodo>
+    <input type="text" class="form-control" [class.is-invalid]="todoIsInvalid" [(ngModel)]="task.todo" #inputTodo>
     <input type="text" class="form-control" ngbDatepicker [(ngModel)]="deadline" #dp="ngbDatepicker" (ngModelChange)="deadlineChanged()"
         [minDate]="minDate" placeholder="deadline: yyyy-mm-dd">
     <div class="input-group-append">

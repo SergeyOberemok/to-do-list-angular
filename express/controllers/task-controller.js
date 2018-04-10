@@ -55,13 +55,14 @@ module.exports = class TaskController extends Controller {
     update(req, res) {
         super.connect('tasks', (collection) => {
             let task = req.body;
-            delete task._id;
+            let toUpdate = {
+                $set: Object.assign({}, task)
+            };
+            delete toUpdate.$set._id;
 
             collection.updateOne({
                     _id: mongodb.ObjectID(req.params.id)
-                }, {
-                    $set: task
-                },
+                }, toUpdate,
                 (err, result) => {
                     if (err) {
                         console.error(err);
