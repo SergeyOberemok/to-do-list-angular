@@ -1,0 +1,18 @@
+@import '~bootstrap/scss/bootstrap-reboot';
+@import '~bootstrap/scss/bootstrap';
+
+.priority-0 {
+    color: gray;
+}
+
+.priority-1 {
+    color: desaturate(red, 50%);
+}
+
+.priority-2 {
+    color: desaturate(red, 80%);
+}
+
+.priority-3 {
+    color: desaturate(yellow, 80%);
+}

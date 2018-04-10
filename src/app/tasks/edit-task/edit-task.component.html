@@ -1,0 +1,38 @@
+<div class="input-group">
+    <input type="text" class="form-control" [(ngModel)]="task.todo" #inputTodo>
+    <input type="text" class="form-control" ngbDatepicker [(ngModel)]="deadline" #dp="ngbDatepicker" (ngModelChange)="deadlineChanged()"
+        [minDate]="minDate" placeholder="deadline: yyyy-mm-dd">
+    <div class="input-group-append">
+        <!-- DATEPICKER -->
+        <button class="btn btn-light" type="button" (click)="dp.toggle()">
+            <i class="fas fa-fw fa-calendar"></i>
+        </button>
+        <!-- PRIORITY-->
+        <div ngbDropdown>
+            <button class="btn btn-light" [ngClass]="task.getPriorityContext()" type="button" ngbDropdownToggle>
+                <i class="fas fa-fw fa-flag"></i>
+            </button>
+            <div class="dropdown-menu" ngbDropdownMenu>
+                <button class="dropdown-item" (click)="task.priority = 0">
+                    <i class="fas fa-fw fa-flag priority-0"></i>
+                    <span>Default</span>
+                </button>
+                <button class="dropdown-item priority-3" (click)="task.priority = 3">
+                    <i class="fas fa-fw fa-flag"></i>
+                    <span>Priority 3</span>
+                </button>
+                <button class="dropdown-item priority-2" (click)="task.priority = 2">
+                    <i class="fas fa-fw fa-flag"></i>
+                    <span>Priority 2</span>
+                </button>
+                <button class="dropdown-item priority-1" (click)="task.priority = 1">
+                    <i class="fas fa-fw fa-flag"></i>
+                    <span>Priority 1</span>
+                </button>
+            </div>
+        </div>
+        <!-- ADD | CANCEL -->
+        <button class="btn btn-primary" type="button" (click)="okClicked()">{{ okTitle }}</button>
+        <button class="btn btn-outline-secondary" type="button" (click)="cancelClicked()">Cancel</button>
+    </div>
+</div>

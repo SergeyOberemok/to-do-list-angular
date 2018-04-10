@@ -1,0 +1,8 @@
+:host {
+    input[ngbDatepicker] {
+        max-width: 200px;
+    }
+    button[ngbDropdownToggle] {
+        border-radius: 0;
+    }
+}

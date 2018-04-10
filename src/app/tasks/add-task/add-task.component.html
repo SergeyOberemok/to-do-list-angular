@@ -1,0 +1,13 @@
+<div class="row" [class.d-none]="isLinkClicked">
+    <div class="col">
+        <a href="#" (click)="linkClicked($event)">
+            <i class="fas fa-plus"></i>
+            <span>Add task</span>
+        </a>
+    </div>
+</div>
+<div class="row" *ngIf="isLinkClicked">
+    <div class="col">
+        <tas-edit-task [task]="task" [ok-title]="'Add'" [focus]="isLinkClicked" (ok)="addTask($event)" (cancel)="cancelClicked($event)"></tas-edit-task>
+    </div>
+</div>
