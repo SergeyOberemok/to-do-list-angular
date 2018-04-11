@@ -1,0 +1,11 @@
+<div class="row">
+    <div class="col-1">
+        <div class="form-check" *ngIf="!isTodoClicked">
+            <input type="checkbox" class="form-check-input" [(ngModel)]="task.done" (ngModelChange)="statusChanged()">
+        </div>
+        <span *ngIf="isTodoClicked">
+            <i class="fas fa-spinner fa-spin fa-fw"></i>
+        </span>
+    </div>
+    <div class="col-11">{{ task.todo }}</div>
+</div>

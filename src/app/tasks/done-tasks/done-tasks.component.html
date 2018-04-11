@@ -1,19 +1,17 @@
-<div class="row" [class.d-none]="tasks.length > 0">
+<div class="row" *ngIf="isDoneTasksFetching">
+    <div class="col d-flex justify-content-center">
+        <i class="fas fa-spinner fa-spin"></i>
+    </div>
+</div>
+<div class="row" [class.d-none]="tasks.length > 0 || isDoneTasksFetching">
     <div class="col text-center">
         <a href="#" (click)="fetchClicked($event)" title="Show archived tasks">
             <i class="fas fa-redo-alt" data-fa-transform="flip-h"></i>
         </a>
     </div>
 </div>
-<div class="row" [class.d-none]="tasks.length === 0">
+<div class="row" *ngFor="let task of tasks; index as i">
     <div class="col">
-        <div class="row" *ngFor="let task of tasks; index as i">
-            <div class="col-1">
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" [(ngModel)]="task.done" (ngModelChange)="statusChanged(i)">
-                </div>
-            </div>
-            <div class="col-11">{{ task.todo }}</div>
-        </div>
+        <tas-done-task [task]="task" (todo)="makeTodo($event)"></tas-done-task>
     </div>
 </div>

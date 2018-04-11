@@ -49,7 +49,11 @@ export class TodoTasksComponent implements OnInit, OnDestroy {
                     console.error(error);
                     this.notificationsService.error('Remove', 'Error');
                 }
-            )
+            );
+    }
+
+    public get isTodoTasksFetching(): boolean {
+        return this.tasksService.isTodoTasksFetching;
     }
 
 }

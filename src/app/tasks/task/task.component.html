@@ -1,7 +1,15 @@
-<div class="row" [class.d-none]="isTitleClicked">
-    <div class="col-1">
-        <div class="form-check" [ngClass]="task.getPriorityContext()">
-            <input type="checkbox" class="form-check-input" [(ngModel)]="task.done" (ngModelChange)="statusChanged($event)">
+<!-- TASK ROW -->
+<div class="row" [class.d-none]="isTitleClicked || isEditingTask">
+    <div class="col-1 d-flex">
+        <div>
+            <div class="form-check" [ngClass]="task.getPriorityContext()" *ngIf="!isDoneClicked">
+                <input type="checkbox" class="form-check-input" [(ngModel)]="task.done" (ngModelChange)="statusChanged($event)">
+            </div>
+        </div>
+        <div *ngIf="isDoneClicked">
+            <i class="fas fa-spinner fa-spin fa-fw"></i>
+        </div>
+        <div>
             <i class="fas fa-fw fa-flag"></i>
         </div>
     </div>
@@ -9,12 +17,22 @@
         <a href="#" (click)="titleClicked($event)">{{ task.todo }}</a>
     </div>
     <div class="col-3">{{ task.deadline }}</div>
-    <div class="col-1 text-right">
-        <a href="#" class="text-danger d-none" (click)="removeClicked($event)">
-            <i class="fas fa-times"></i>
+    <div class="col-1 d-flex justify-content-end">
+        <a href="#" class="text-danger d-none" (click)="removeClicked($event)" *ngIf="!isRemoveClicked">
+            <i class="fas fa-times fa-fw"></i>
         </a>
+        <span *ngIf="isRemoveClicked">
+            <i class="fas fa-spinner fa-spin fa-fw"></i>
+        </span>
     </div>
 </div>
+<!-- SPINNER -->
+<div class="row" *ngIf="isEditingTask">
+    <div class="col d-flex justify-content-center">
+        <i class="fas fa-spinner fa-spin"></i>
+    </div>
+</div>
+<!-- EDIT TASK -->
 <div class="row" *ngIf="isTitleClicked">
     <div class="col">
         <tas-edit-task [task]="task" [ok-title]="'Update'" [focus]="isTitleClicked" (ok)="updateTask($event)" (cancel)="cancelClicked($event)"></tas-edit-task>

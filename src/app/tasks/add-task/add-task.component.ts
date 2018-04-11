@@ -16,6 +16,7 @@ export class AddTaskComponent implements OnInit {
     private subscriptions: Subscription[] = null;
     public isLinkClicked: boolean;
     public task: Task = null;
+    public isAddingTask: boolean;
 
     constructor(
         private tasksService: TasksService,
@@ -49,8 +50,11 @@ export class AddTaskComponent implements OnInit {
     }
 
     public addTask($event: Task): void {
+        this.isLinkClicked = false;
+        this.isAddingTask = true;
+
         this.tasksService.store($event)
-            .pipe(tap(() => this.isLinkClicked = false))
+            .pipe(tap(() => this.isAddingTask = false))
             .subscribe(
                 task => {
                     this.task = new Task();

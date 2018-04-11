@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { map, switchMap, toArray } from 'rxjs/operators';
+import { map, switchMap, toArray, tap } from 'rxjs/operators';
 import { Observer } from 'rxjs/Observer';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -12,6 +12,8 @@ export class TasksService {
     private storedTodoTasks: StoredTasks = null;
     private storedDoneTasks: { tasks: Task[] } = null;
     public doneTasks: BehaviorSubject<Task[]> = null;
+    public isTodoTasksFetching: boolean;
+    public isDoneTasksFetching: boolean;
 
     constructor(private http: HttpClient) {
         this.storedTodoTasks = new StoredTasks();
@@ -24,22 +26,28 @@ export class TasksService {
     }
 
     private makeFetchTodoTasksRequest(): Observable<Task[]> {
+        this.isTodoTasksFetching = true;
+
         return this.http.get<{ data: Task[] }>('/api/tasks', { params: { done: 'false' } })
             .pipe(
                 map(response => response.data),
                 switchMap(tasks => Observable.from(tasks)),
                 map(task => Object.assign(new Task(), task)),
-                toArray()
+                toArray(),
+                tap(() => this.isTodoTasksFetching = false)
             );
     }
 
     public fetchDoneTasks(): void {
+        this.isDoneTasksFetching = true;
+
         this.http.get<{ data: Task[] }>('/api/tasks', { params: { done: 'true' } })
             .pipe(
                 map(response => response.data),
                 switchMap(tasks => Observable.from(tasks)),
                 map(task => Object.assign(new Task(), task)),
-                toArray()
+                toArray(),
+                tap(() => this.isDoneTasksFetching = false)
             )
             .subscribe(
                 tasks => {

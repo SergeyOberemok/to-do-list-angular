@@ -10,6 +10,7 @@ import { AddTaskComponent } from './add-task/add-task.component';
 import { TaskComponent } from './task/task.component';
 import { EditTaskComponent } from './edit-task/edit-task.component';
 import { DoneTasksComponent } from './done-tasks/done-tasks.component';
+import { DoneTaskComponent } from './done-task/done-task.component';
 
 @NgModule({
     imports: [
@@ -18,7 +19,7 @@ import { DoneTasksComponent } from './done-tasks/done-tasks.component';
         FormsModule,
         NgbModule
     ],
-    declarations: [TodoTasksComponent, AddTaskComponent, TaskComponent, EditTaskComponent, DoneTasksComponent],
+    declarations: [TodoTasksComponent, AddTaskComponent, TaskComponent, EditTaskComponent, DoneTasksComponent, DoneTaskComponent],
     providers: [TasksService],
     exports: [TodoTasksComponent, AddTaskComponent, DoneTasksComponent]
 })

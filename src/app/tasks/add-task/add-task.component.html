@@ -1,9 +1,14 @@
-<div class="row" [class.d-none]="isLinkClicked">
+<div class="row" [class.d-none]="isLinkClicked || isAddingTask">
     <div class="col">
         <a href="#" (click)="linkClicked($event)">
             <i class="fas fa-plus"></i>
             <span>Add task</span>
         </a>
+    </div>
+</div>
+<div class="row" *ngIf="isAddingTask">
+    <div class="col d-flex justify-content-center">
+        <i class="fas fa-spinner fa-spin"></i>
     </div>
 </div>
 <div class="row" *ngIf="isLinkClicked">

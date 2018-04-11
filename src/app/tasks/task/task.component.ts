@@ -18,6 +18,9 @@ export class TaskComponent implements OnInit {
     @Output('remove') removeEvent: EventEmitter<Task> = null;
     @Output('done') doneEvent: EventEmitter<Task> = null;
     public isTitleClicked: boolean;
+    public isEditingTask: boolean;
+    public isRemoveClicked: boolean;
+    public isDoneClicked: boolean;
 
     constructor(
         private tasksService: TasksService,
@@ -42,6 +45,7 @@ export class TaskComponent implements OnInit {
     public removeClicked($event: any): void {
         $event.preventDefault();
 
+        this.isRemoveClicked = true;
         this.removeEvent.emit(this.task);
     }
 
@@ -57,8 +61,11 @@ export class TaskComponent implements OnInit {
     }
 
     public updateTask($event: Task): void {
+        this.isTitleClicked = false;
+        this.isEditingTask = true;
+
         this.tasksService.update($event)
-            .pipe(tap(() => this.isTitleClicked = false))
+            .pipe(tap(() => this.isEditingTask = false))
             .subscribe(
                 task => this.notificationsService.success('Update', 'Success'),
                 error => {
@@ -69,6 +76,7 @@ export class TaskComponent implements OnInit {
     }
 
     public statusChanged($event: any): void {
+        this.isDoneClicked = true;
         this.doneEvent.emit(this.task);
     }
 

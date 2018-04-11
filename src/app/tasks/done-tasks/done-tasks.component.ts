@@ -36,8 +36,8 @@ export class DoneTasksComponent implements OnInit, OnDestroy {
         this.tasksService.fetchDoneTasks();
     }
 
-    public statusChanged(index: number): void {
-        this.tasksService.makeTodo(this.tasks[index])
+    public makeTodo($event: Task): void {
+        this.tasksService.makeTodo($event)
             .subscribe(
                 () => this.notificationsService.success('Update', 'Success'),
                 error => {
@@ -45,6 +45,10 @@ export class DoneTasksComponent implements OnInit, OnDestroy {
                     this.notificationsService.error('Update', 'Error');
                 }
             );
+    }
+
+    public get isDoneTasksFetching(): boolean {
+        return this.tasksService.isDoneTasksFetching;
     }
 
 }
