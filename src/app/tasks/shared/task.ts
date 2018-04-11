@@ -1,5 +1,5 @@
 export class Task {
-    _id?: string;
+    id?: string;
     todo: string;
     deadline: string;
     priority: number;

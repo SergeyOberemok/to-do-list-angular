@@ -1,5 +1,6 @@
 const Controller = require('./controller');
 const mongodb = require('mongodb');
+const TaskTransformer = require('../transformers/task-transformer');
 
 module.exports = class TaskController extends Controller {
 
@@ -17,7 +18,7 @@ module.exports = class TaskController extends Controller {
                 }
 
                 res.send({
-                    data: result
+                    data: result.map((task) => (new TaskTransformer(task)).transform())
                 });
             });
         });
@@ -34,7 +35,7 @@ module.exports = class TaskController extends Controller {
                 }
 
                 res.send({
-                    data: task
+                    data: (new TaskTransformer(task)).transform()
                 });
             });
         });
@@ -60,10 +61,10 @@ module.exports = class TaskController extends Controller {
     update(req, res) {
         super.connect('tasks', (collection) => {
             let task = req.body;
+            delete task.id;
             let toUpdate = {
                 $set: Object.assign({}, task)
             };
-            delete toUpdate.$set._id;
 
             collection.updateOne({
                     _id: mongodb.ObjectID(req.params.id)
@@ -74,8 +75,9 @@ module.exports = class TaskController extends Controller {
                         throw err;
                     }
 
+                    task._id = req.params.id;
                     res.send({
-                        data: task
+                        data: (new TaskTransformer(task)).transform()
                     });
                 });
         });

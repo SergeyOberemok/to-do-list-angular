@@ -73,7 +73,7 @@ export class TasksService {
     }
 
     public remove(task: Task): Observable<number> {
-        return this.http.delete<{ data: number }>(`/api/tasks/${task._id}`)
+        return this.http.delete<{ data: number }>(`/api/tasks/${task.id}`)
             .pipe(
                 map(response => response.data),
                 switchMap(count => Observable.create((observer: Observer<number>) => {
@@ -86,7 +86,7 @@ export class TasksService {
     }
 
     private makeUpdateRequest(task: Task): Observable<Task> {
-        return this.http.put<{ data: Task }>(`/api/tasks/${task._id}`, task)
+        return this.http.put<{ data: Task }>(`/api/tasks/${task.id}`, task)
             .pipe(map(response => response.data));
     }
 
