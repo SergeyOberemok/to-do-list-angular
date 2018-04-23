@@ -2,14 +2,14 @@
 <div class="row" [class.d-none]="isTitleClicked || isEditingTask">
     <div class="col-1 d-flex">
         <div>
-            <div class="form-check" [ngClass]="task.getPriorityContext()" *ngIf="!isDoneClicked">
+            <div class="form-check" *ngIf="!isDoneClicked">
                 <input type="checkbox" class="form-check-input" [(ngModel)]="task.done" (ngModelChange)="statusChanged($event)">
             </div>
         </div>
         <div *ngIf="isDoneClicked">
             <i class="fas fa-spinner fa-spin fa-fw"></i>
         </div>
-        <div>
+        <div [ngClass]="task.getPriorityContext()">
             <i class="fas fa-fw fa-flag"></i>
         </div>
     </div>
